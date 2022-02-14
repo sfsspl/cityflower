@@ -1,0 +1,10 @@
+const BASE_URL = "http://api.camerton.in/api/";
+const LOGIN_API_ENDPOINT = BASE_URL + "login-using-mobile-number";
+const OTP_VERIFICATION_API_ENDPOINT = BASE_URL + "login-using-otp";
+const BANNERS_API_ENDPOINT = BASE_URL + "banners";
+const MY_CF_CARD_API_ENDPOINT = BASE_URL + "card";
+const PROMOTIONS_API_ENDPOINT = BASE_URL + "promotions";
+const LOGOUT_API_ENDPOINT = BASE_URL + "logout";
+const OUTLET_LIST_API_ENDPOINT = BASE_URL + "outlets";
+const POINTS_HISTORY_API_ENDPOINT = BASE_URL + "transactions";
+const COUNTRY_ID = "4";

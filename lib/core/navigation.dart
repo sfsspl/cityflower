@@ -7,6 +7,7 @@ import 'package:city_flower/features/outlet_list/presentation/ui/outlet_list_pag
 import 'package:city_flower/features/points_history/presentation/ui/points_history_page.dart';
 import 'package:city_flower/features/promotion/domain/entity/promotion_entity.dart';
 import 'package:city_flower/features/promotion/presentation/ui/promotion_page.dart';
+import 'package:city_flower/features/register/presentation/ui/register_page.dart';
 import 'package:flutter/material.dart';
 
 enum LAUNCH_MODE { SINGLE_TOP, REPLACEMENT, LAUNCH }
@@ -31,11 +32,15 @@ void navToPromotions(context, {@required promotionType: PROMOTION_TYPE}) {
       ));
 }
 
-void navToOTPPage({@required context, @required String email}) {
+void navToRegister(context, REQUEST_TYPE request_type) {
+  _navigate(context, RegisterPage(requestType: request_type));
+}
+
+void navToOTPPage({@required context, @required String phoneNumber}) {
   _navigate(
     context,
     OTPPage(
-      email: email,
+      phoneNumber: phoneNumber,
     ),
   );
 }
@@ -48,7 +53,7 @@ void navToOutletList({@required BuildContext context}) {
   _navigate(context, OutletListPage());
 }
 
-void navToPointsHistory(@required BuildContext context){
+void navToPointsHistory(@required BuildContext context) {
   _navigate(context, PointsHistoryPage());
 }
 

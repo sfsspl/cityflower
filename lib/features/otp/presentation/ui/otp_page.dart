@@ -11,9 +11,9 @@ import 'package:pin_input_text_field/pin_input_text_field.dart';
 import '../../../../support_ui/button.dart';
 
 class OTPPage extends StatelessWidget {
-  final String email;
+  final String phoneNumber;
 
-  const OTPPage({Key key, @required this.email}) : super(key: key);
+  const OTPPage({Key key, @required this.phoneNumber}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class OTPPage extends StatelessWidget {
           title: Text('OTP'),
         ),
         body: _OTPPageBody(
-          email: email,
+          email: phoneNumber,
         ),
       ),
     );

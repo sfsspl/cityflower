@@ -33,6 +33,8 @@ import 'package:city_flower/features/promotion/data/repository/promotions_reposi
 import 'package:city_flower/features/promotion/domain/repository/promotions_repository.dart';
 import 'package:city_flower/features/promotion/domain/usecase/get_promotions.dart';
 import 'package:city_flower/features/promotion/presentation/bloc/promotion_bloc.dart';
+import 'package:city_flower/features/register/domain/usecase/register_usecase.dart';
+import 'package:city_flower/features/register/presentation/bloc/register_bloc.dart';
 import 'package:city_flower/features/splash/data/datasource/splash_data_source.dart';
 import 'package:city_flower/features/splash/data/datasource/splash_datasource_impl.dart';
 import 'package:city_flower/features/user/data/datasource/user_datasource.dart';
@@ -84,6 +86,8 @@ Future<void> init() async {
       () => OutletListBloc(getOutletListUseCase: serviceLocator()));
   serviceLocator.registerFactory(
       () => PointsHistoryBloc(getPointsHistoryUseCase: serviceLocator()));
+  serviceLocator.registerFactory(
+      () => RegisterBloc(registerUseCase: serviceLocator()));
 
   /*
     ** Usecase
@@ -117,6 +121,8 @@ Future<void> init() async {
       () => GetOutletListUseCase(outletRepository: serviceLocator()));
   serviceLocator.registerLazySingleton(
       () => GetPointsHistoryUseCase(pointsHistoryRepository: serviceLocator()));
+  serviceLocator.registerLazySingleton(
+      () => RegisterUseCase(userRepository: serviceLocator()));
 
   /*
     ** Repositories

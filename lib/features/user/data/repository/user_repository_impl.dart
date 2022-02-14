@@ -41,7 +41,6 @@ class UserRepositoryImpl implements UserRepository {
       } on AuthException {
         return Left(AuthFailure());
       } on ServerException catch (ex) {
-        print('response message ${ex.message}');
         return Left(ServerFailure()..message = ex.message);
       }
     } else {
@@ -94,6 +93,22 @@ class UserRepositoryImpl implements UserRepository {
         await userDataSource.clearUserData();
         return Right(null);
         print('repo logout $ex');
+        return Left(ServerFailure()..message = ex.message);
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> register({String number}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        String loginMessage = await userDataSource.register(number: number);
+        return Right(loginMessage);
+      } on AuthException {
+        return Left(AuthFailure());
+      } on ServerException catch (ex) {
         return Left(ServerFailure()..message = ex.message);
       }
     } else {

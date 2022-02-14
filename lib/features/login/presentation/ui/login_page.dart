@@ -2,6 +2,7 @@ import 'package:city_flower/core/core_widgets/core_widgets.dart';
 import 'package:city_flower/core/navigation.dart';
 import 'package:city_flower/core/network/vo/status.dart';
 import 'package:city_flower/features/login/presentation/bloc/login_bloc.dart';
+import 'package:city_flower/features/register/presentation/ui/register_page.dart';
 import 'package:city_flower/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,7 +50,7 @@ class __LoginPageBodyState extends State<_LoginPageBody> {
           showSnackBarMessage(context, state.login.failure.message);
         } else if (state.login.status == STATUS.success) {
           showToastMessage(context, state.login.data);
-          navToOTPPage(context: context, email: _numberController.text);
+          navToOTPPage(context: context, phoneNumber: _numberController.text);
         }
       },
       child: Form(
@@ -69,9 +70,10 @@ class __LoginPageBodyState extends State<_LoginPageBody> {
                 controller: _numberController,
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
-                    labelText: 'Mobile Number',
-                    enabledBorder: OutlineInputBorder(),
-                    border: OutlineInputBorder()),
+                  labelText: 'Mobile Number',
+                  enabledBorder: OutlineInputBorder(),
+                  border: OutlineInputBorder(),
+                ),
                 validator: (text) {
                   if (text.isEmpty) {
                     return 'Enter mobile number';
@@ -100,7 +102,9 @@ class __LoginPageBodyState extends State<_LoginPageBody> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    navToRegister(context, REQUEST_TYPE.FORGOT_PASSWORD);
+                  },
                   child: Text('Forgot Password?'),
                 ),
               ),
@@ -129,7 +133,9 @@ class __LoginPageBodyState extends State<_LoginPageBody> {
                 height: 20,
               ),
               Button(
-                onPressed: () {},
+                onPressed: () {
+                  navToRegister(context, REQUEST_TYPE.SIGN_IN);
+                },
                 text: 'Register',
               ),
             ],

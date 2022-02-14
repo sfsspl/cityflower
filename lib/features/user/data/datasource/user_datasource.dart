@@ -21,4 +21,6 @@ abstract class UserDataSource {
   Future<MyCFCardEntity> getMyCFCardDetails({@required String token});
 
   Future<void> logout({@required String token});
+
+  Future<String> register({@required String number});
 }

@@ -91,4 +91,20 @@ class UserDataSourceImpl implements UserDataSource {
   Future<void> clearUserData() async {
     await preferences.clear();
   }
+
+  @override
+  Future<String> register({String number}) async{
+    var params = <String, String>{
+      "country_id": COUNTRY_ID,
+      "mobile_number": number,
+    };
+
+    var response = await httpPostRequest(
+        httpClient: httpClient, url: REGISTER_API_ENDPOINT, params: params);
+    if (response.statusCode == 200) {
+      print('response ${response.body}');
+      return json.decode(response.body)['message'];
+    }
+    handleError(response);
+  }
 }

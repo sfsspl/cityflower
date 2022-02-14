@@ -19,4 +19,6 @@ abstract class UserRepository {
   Future<Either<Failure, MyCFCardEntity>> getMyCFCardDetails();
 
   Future<Either<Failure, void>> logout();
+
+  Future<Either<Failure,String>> register({@required String number});
 }

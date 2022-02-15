@@ -5,6 +5,6 @@ import 'package:dartz/dartz.dart';
 import 'package:meta/meta.dart';
 
 abstract class OTPRepository {
-  Future<Either<Failure, OtpResponse>> verifyOTP(
-      {@required String email, @required String otp});
+  Future<Either<Failure, UserVerificationResponse>> verifyOTP(
+      {@required String phoneNumber, @required String otp});
 }

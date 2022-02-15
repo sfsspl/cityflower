@@ -4,11 +4,13 @@ import 'package:city_flower/core/network/api_endpoints.dart';
 import 'package:city_flower/core/network/error/failure.dart';
 import 'package:city_flower/core/network/http_call.dart';
 import 'package:city_flower/core/network/http_error_handler.dart';
+import 'package:city_flower/features/otp/data/model/otp_response.dart';
 import 'package:city_flower/features/user/data/datasource/user_datasource.dart';
 import 'package:city_flower/features/user/data/model/my_cf_card_model.dart';
 import 'package:city_flower/features/user/data/model/user_data_model.dart';
 import 'package:city_flower/features/user/domain/entity/my_cf_card_entity.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,7 +38,8 @@ class UserDataSourceImpl implements UserDataSource {
   }
 
   @override
-  Future<String> login({String phoneNumber, String password}) async {
+  Future<UserVerificationResponse> login(
+      {String phoneNumber, String password}) async {
     var params = <String, String>{
       "country_id": COUNTRY_ID,
       "mobile_number": phoneNumber,
@@ -45,8 +48,9 @@ class UserDataSourceImpl implements UserDataSource {
 
     var response = await httpPostRequest(
         httpClient: httpClient, url: LOGIN_API_ENDPOINT, params: params);
+    debugPrint('login response ${response.body} ');
     if (response.statusCode == 200) {
-      return json.decode(response.body)['message'];
+      return UserVerificationResponse.fromJson(json.decode(response.body));
     }
     handleError(response);
   }
@@ -93,7 +97,7 @@ class UserDataSourceImpl implements UserDataSource {
   }
 
   @override
-  Future<String> register({String number}) async{
+  Future<String> register({String number}) async {
     var params = <String, String>{
       "country_id": COUNTRY_ID,
       "mobile_number": number,
@@ -103,6 +107,23 @@ class UserDataSourceImpl implements UserDataSource {
         httpClient: httpClient, url: REGISTER_API_ENDPOINT, params: params);
     if (response.statusCode == 200) {
       print('response ${response.body}');
+      return json.decode(response.body)['message'];
+    }
+    handleError(response);
+  }
+
+  @override
+  Future<void> setPassword({String token, String password}) async {
+    var params = <String, String>{
+      "new_password": password,
+    };
+
+    var response = await httpPostRequest(
+        httpClient: httpClient,
+        url: SET_PASSWORD_API_ENDPOINT,
+        params: params,
+        token: token);
+    if (response.statusCode == 200) {
       return json.decode(response.body)['message'];
     }
     handleError(response);

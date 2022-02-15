@@ -5,6 +5,7 @@ import 'package:city_flower/core/network/vo/status.dart';
 import 'package:city_flower/core/user/bloc/user_bloc.dart';
 import 'package:city_flower/features/home/presentation/bloc/home_bloc.dart';
 import 'package:city_flower/features/promotion/domain/entity/promotion_entity.dart';
+import 'package:city_flower/features/register/presentation/ui/register_page.dart';
 import 'package:city_flower/features/user/domain/entity/my_cf_card_entity.dart';
 import 'package:city_flower/features/user/domain/entity/user_entity.dart';
 import 'package:city_flower/injection_container.dart';
@@ -34,12 +35,15 @@ class HomePage extends StatelessWidget {
                     UserEntity _user = state.userDetails.data;
                     return UserAccountsDrawerHeader(
                         accountName: Text(_user.name),
-                        accountEmail: Text(_user.email));
+                        accountEmail: Text(_user.email??''));
                   }
                   return Container();
                 },
               ),
               ListTile(
+                onTap: (){
+                  navToRegister(context: context,  request_type: REQUEST_TYPE.CHANGE_PASSWORD);
+                },
                 leading: Icon(Icons.lock),
                 title: Text('Change Password'),
               ),

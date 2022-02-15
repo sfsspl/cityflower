@@ -122,7 +122,7 @@ class _CFCardPageBodyState extends State<CFCardPageBody> {
                               if (state.userDetails.status == STATUS.success) {
                                 UserEntity _userData = state.userDetails.data;
                                 return Text(
-                                  _userData.email,
+                                  _userData.email??'',
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w600,

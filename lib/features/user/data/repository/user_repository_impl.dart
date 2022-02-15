@@ -1,6 +1,7 @@
 import 'package:city_flower/core/network/error/exceptions.dart';
 import 'package:city_flower/core/network/error/failure.dart';
 import 'package:city_flower/core/network/network_info.dart';
+import 'package:city_flower/features/otp/data/model/otp_response.dart';
 import 'package:city_flower/features/user/data/datasource/user_datasource.dart';
 import 'package:city_flower/features/user/domain/entity/my_cf_card_entity.dart';
 import 'package:city_flower/features/user/domain/entity/user_entity.dart';
@@ -31,11 +32,11 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, String>> login(
+  Future<Either<Failure, UserVerificationResponse>> login(
       {String phoneNumber, String password}) async {
     if (await networkInfo.isConnected) {
       try {
-        String loginMessage = await userDataSource.login(
+        UserVerificationResponse loginMessage = await userDataSource.login(
             phoneNumber: phoneNumber, password: password);
         return Right(loginMessage);
       } on AuthException {
@@ -106,6 +107,23 @@ class UserRepositoryImpl implements UserRepository {
       try {
         String loginMessage = await userDataSource.register(number: number);
         return Right(loginMessage);
+      } on AuthException {
+        return Left(AuthFailure());
+      } on ServerException catch (ex) {
+        return Left(ServerFailure()..message = ex.message);
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> setNewPassword(
+      {String token, String password}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await userDataSource.setPassword(token: token, password: password);
+        return Right(null);
       } on AuthException {
         return Left(AuthFailure());
       } on ServerException catch (ex) {

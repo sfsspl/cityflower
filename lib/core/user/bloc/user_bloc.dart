@@ -33,6 +33,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       });
     }
     if (event is LogoutEvent) {
+      print('logout event called');
       await Future.delayed(Duration(milliseconds: 500));
       yield state.copy(logoutState: Resource.loading());
       var _result = await logoutUseCase(NoParams());

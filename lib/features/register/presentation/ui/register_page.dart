@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
-enum REQUEST_TYPE { SIGN_IN, FORGOT_PASSWORD }
+enum REQUEST_TYPE { SIGN_IN, FORGOT_PASSWORD, CHANGE_PASSWORD }
 
 class RegisterPage extends StatelessWidget {
   final REQUEST_TYPE requestType;
@@ -59,8 +59,11 @@ class _RegisterPageBodyState extends State<_RegisterPageBody> {
         if (state is RegistrationFailedState) {
           showSnackBarMessage(context, state.failure.message);
         }
-        if(state is RegistrationSuccessState){
-          navToOTPPage(context: context, phoneNumber: _numberController.text);
+        if (state is RegistrationSuccessState) {
+          navToOTPPage(
+              context: context,
+              phoneNumber: _numberController.text,
+              request_type: REQUEST_TYPE.SIGN_IN);
         }
       },
       child: Form(

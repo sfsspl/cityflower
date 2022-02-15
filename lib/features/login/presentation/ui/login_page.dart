@@ -49,8 +49,7 @@ class __LoginPageBodyState extends State<_LoginPageBody> {
         if (state.login.status == STATUS.error) {
           showSnackBarMessage(context, state.login.failure.message);
         } else if (state.login.status == STATUS.success) {
-          showToastMessage(context, state.login.data);
-          navToOTPPage(context: context, phoneNumber: _numberController.text);
+          navToHome(context, launchMode: LAUNCH_MODE.SINGLE_TOP);
         }
       },
       child: Form(
@@ -103,7 +102,7 @@ class __LoginPageBodyState extends State<_LoginPageBody> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    navToRegister(context, REQUEST_TYPE.FORGOT_PASSWORD);
+                    navToRegister(context: context,request_type:  REQUEST_TYPE.FORGOT_PASSWORD);
                   },
                   child: Text('Forgot Password?'),
                 ),
@@ -134,7 +133,7 @@ class __LoginPageBodyState extends State<_LoginPageBody> {
               ),
               Button(
                 onPressed: () {
-                  navToRegister(context, REQUEST_TYPE.SIGN_IN);
+                  navToRegister(context: context,request_type:  REQUEST_TYPE.SIGN_IN);
                 },
                 text: 'Register',
               ),

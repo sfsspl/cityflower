@@ -2,12 +2,14 @@ import 'package:city_flower/features/cf_card/presentation/ui/cf_card_page.dart';
 import 'package:city_flower/features/home/presentation/ui/home_page.dart';
 import 'package:city_flower/features/intro/presentation/ui/intro_page.dart';
 import 'package:city_flower/features/login/presentation/ui/login_page.dart';
+import 'package:city_flower/features/otp/data/model/otp_response.dart';
 import 'package:city_flower/features/otp/presentation/ui/otp_page.dart';
 import 'package:city_flower/features/outlet_list/presentation/ui/outlet_list_page.dart';
 import 'package:city_flower/features/points_history/presentation/ui/points_history_page.dart';
 import 'package:city_flower/features/promotion/domain/entity/promotion_entity.dart';
 import 'package:city_flower/features/promotion/presentation/ui/promotion_page.dart';
 import 'package:city_flower/features/register/presentation/ui/register_page.dart';
+import 'package:city_flower/features/set_password/presentation/ui/set_password_page.dart';
 import 'package:flutter/material.dart';
 
 enum LAUNCH_MODE { SINGLE_TOP, REPLACEMENT, LAUNCH }
@@ -32,15 +34,19 @@ void navToPromotions(context, {@required promotionType: PROMOTION_TYPE}) {
       ));
 }
 
-void navToRegister(context, REQUEST_TYPE request_type) {
+void navToRegister({context, REQUEST_TYPE request_type}) {
   _navigate(context, RegisterPage(requestType: request_type));
 }
 
-void navToOTPPage({@required context, @required String phoneNumber}) {
+void navToOTPPage(
+    {@required context,
+    @required String phoneNumber,
+    @required REQUEST_TYPE request_type}) {
   _navigate(
     context,
     OTPPage(
       phoneNumber: phoneNumber,
+      requestType: request_type,
     ),
   );
 }

@@ -1,6 +1,7 @@
 const BASE_URL = "http://api.camerton.in/api/";
 const LOGIN_API_ENDPOINT = BASE_URL + "login-using-mobile-number";
 const REGISTER_API_ENDPOINT = BASE_URL + "request-otp";
+const SET_PASSWORD_API_ENDPOINT = BASE_URL + "change-password";
 const OTP_VERIFICATION_API_ENDPOINT = BASE_URL + "login-using-otp";
 const BANNERS_API_ENDPOINT = BASE_URL + "banners";
 const MY_CF_CARD_API_ENDPOINT = BASE_URL + "card";

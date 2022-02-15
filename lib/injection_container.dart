@@ -35,6 +35,8 @@ import 'package:city_flower/features/promotion/domain/usecase/get_promotions.dar
 import 'package:city_flower/features/promotion/presentation/bloc/promotion_bloc.dart';
 import 'package:city_flower/features/register/domain/usecase/register_usecase.dart';
 import 'package:city_flower/features/register/presentation/bloc/register_bloc.dart';
+import 'package:city_flower/features/set_password/domain/entity/set_password_usecase.dart';
+import 'package:city_flower/features/set_password/presentation/bloc/set_password_bloc.dart';
 import 'package:city_flower/features/splash/data/datasource/splash_data_source.dart';
 import 'package:city_flower/features/splash/data/datasource/splash_datasource_impl.dart';
 import 'package:city_flower/features/user/data/datasource/user_datasource.dart';
@@ -67,8 +69,13 @@ Future<void> init() async {
       userLoggedInUseCase: serviceLocator()));
   serviceLocator.registerFactory(
       () => IntroBloc(setFirstLaunchComplete: serviceLocator()));
-  serviceLocator
-      .registerFactory(() => LoginBloc(loginUseCase: serviceLocator()));
+  serviceLocator.registerFactory(
+    () => LoginBloc(
+      loginUseCase: serviceLocator(),
+      saveUserDataUseCase: serviceLocator(),
+      saveUserTokenUseCase: serviceLocator(),
+    ),
+  );
   serviceLocator.registerFactory(() => OtpBloc(
       otpRepository: serviceLocator(),
       saveUserDataUseCase: serviceLocator(),
@@ -86,8 +93,12 @@ Future<void> init() async {
       () => OutletListBloc(getOutletListUseCase: serviceLocator()));
   serviceLocator.registerFactory(
       () => PointsHistoryBloc(getPointsHistoryUseCase: serviceLocator()));
-  serviceLocator.registerFactory(
-      () => RegisterBloc(registerUseCase: serviceLocator()));
+  serviceLocator
+      .registerFactory(() => RegisterBloc(registerUseCase: serviceLocator()));
+  serviceLocator.registerFactory(() => SetPasswordBloc(
+      saveUserDataUseCase: serviceLocator(),
+      saveUserTokenUseCase: serviceLocator(),
+      setPasswordUseCase: serviceLocator()));
 
   /*
     ** Usecase
@@ -123,6 +134,8 @@ Future<void> init() async {
       () => GetPointsHistoryUseCase(pointsHistoryRepository: serviceLocator()));
   serviceLocator.registerLazySingleton(
       () => RegisterUseCase(userRepository: serviceLocator()));
+  serviceLocator.registerLazySingleton(
+      () => SetPasswordUseCase(userRepository: serviceLocator()));
 
   /*
     ** Repositories

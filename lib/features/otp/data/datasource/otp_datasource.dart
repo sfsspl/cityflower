@@ -3,6 +3,6 @@ import 'package:city_flower/features/user/data/model/user_data_model.dart';
 import 'package:meta/meta.dart';
 
 abstract class OTPDataSource {
-  Future<OtpResponse> verifyOTP(
-      {@required String email, @required String otp});
+  Future<UserVerificationResponse> verifyOTP(
+      {@required String phoneNumber, @required String otp});
 }

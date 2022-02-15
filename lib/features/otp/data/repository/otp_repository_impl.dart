@@ -14,14 +14,17 @@ class OTPRepositoryImpl implements OTPRepository {
   OTPRepositoryImpl({@required this.networkInfo, @required this.otpDataSource});
 
   @override
-  Future<Either<Failure, OtpResponse>> verifyOTP(
-      {String email, String otp}) async {
+  Future<Either<Failure, UserVerificationResponse>> verifyOTP(
+      {String phoneNumber, String otp}) async {
     if (await networkInfo.isConnected) {
       try {
-        OtpResponse userEntity =
-            await otpDataSource.verifyOTP(email: email, otp: otp);
+        UserVerificationResponse userEntity =
+            await otpDataSource.verifyOTP(phoneNumber: phoneNumber, otp: otp);
+        print('user entity ${userEntity}');
         return Right(userEntity);
-      } on ServerException catch (ex) {
+      } on AuthException catch (ex){
+        return Left(ServerFailure()..message = ex.message);
+      }on ServerException catch (ex) {
         return Left(ServerFailure()..message = ex.message);
       }
     } else {

@@ -34,6 +34,7 @@ class OutletListBloc extends Bloc<OutletListEvent, OutletListState> {
         yield state.copy(outletList: Resource.error(failure: l));
       }, (r) async* {
         _allOutlets = r;
+        cityList.add("All cities");
         if (r.isNotEmpty) {
           r.forEach((element) {
             cityList.add(element.city);

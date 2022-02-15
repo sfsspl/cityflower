@@ -29,16 +29,15 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
   ) async* {
     if (event is VerifyOtpEvent) {
       yield state.copy(otpVerificationResource: Resource.loading());
-      final _result =
-          await otpRepository.verifyOTP(email: event.email, otp: event.otp);
+      final _result = await otpRepository.verifyOTP(
+          phoneNumber: event.email, otp: event.otp);
 
       yield* _result.fold((failure) async* {
         yield state.copy(
             otpVerificationResource: Resource.error(failure: failure));
       }, (otpResponse) async* {
-        await saveUserDataUseCase(otpResponse.user);
-        await saveUserTokenUseCase(otpResponse.token);
-        yield state.copy(otpVerificationResource: Resource.success());
+        yield state.copy(
+            otpVerificationResource: Resource.success(data: otpResponse));
       });
     }
   }

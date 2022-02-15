@@ -31,18 +31,14 @@ class HomeBloc extends Bloc<HomeEvent, HomePageState> {
       final _cfCardResponse = await _cfCardRequired;
 
       yield* _bannerResponse.fold((l) async* {
-        print('error $l');
         yield state.copy(bannerResource: Resource.error(failure: l));
       }, (r) async* {
-        print('success $r');
         yield state.copy(bannerResource: Resource.success(data: r));
       });
 
       yield* _cfCardResponse.fold((l) async* {
-        print('error $l');
         yield state.copy(myCfCardResource: Resource.error(failure: l));
       }, (r) async* {
-        print('success $r');
         yield state.copy(myCfCardResource: Resource.success(data: r));
       });
     }

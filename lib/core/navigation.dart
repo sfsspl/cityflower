@@ -38,6 +38,22 @@ void navToRegister({context, REQUEST_TYPE request_type}) {
   _navigate(context, RegisterPage(requestType: request_type));
 }
 
+void navToSetPasswordPage({
+  @required BuildContext context,
+  @required REQUEST_TYPE requestType,
+  String token,
+  UserVerificationResponse verificationResponse,
+}) {
+  _navigate(
+    context,
+    SetPasswordPage(
+      requestType: requestType,
+      token: token,
+      verificationResponse: verificationResponse,
+    ),
+  );
+}
+
 void navToOTPPage(
     {@required context,
     @required String phoneNumber,

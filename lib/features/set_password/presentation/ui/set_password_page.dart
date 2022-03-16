@@ -11,10 +11,14 @@ import 'package:meta/meta.dart';
 
 class SetPasswordPage extends StatelessWidget {
   final REQUEST_TYPE requestType;
+  final String token;
   UserVerificationResponse verificationResponse;
 
   SetPasswordPage(
-      {Key key, @required this.requestType, this.verificationResponse})
+      {Key key,
+      @required this.requestType,
+      this.token,
+      this.verificationResponse})
       : super(key: key);
 
   @override
@@ -29,6 +33,7 @@ class SetPasswordPage extends StatelessWidget {
         body: _SetPasswordPageBody(
           requestType: requestType,
           verificationResponse: verificationResponse,
+          token: token,
         ),
       ),
     );
@@ -37,10 +42,14 @@ class SetPasswordPage extends StatelessWidget {
 
 class _SetPasswordPageBody extends StatefulWidget {
   final REQUEST_TYPE requestType;
+  final String token;
   UserVerificationResponse verificationResponse;
 
   _SetPasswordPageBody(
-      {Key key, @required this.requestType, this.verificationResponse})
+      {Key key,
+      @required this.requestType,
+      @required this.token,
+      this.verificationResponse})
       : super(key: key);
 
   @override
@@ -48,7 +57,7 @@ class _SetPasswordPageBody extends StatefulWidget {
 }
 
 class _SetPasswordPageBodyState extends State<_SetPasswordPageBody> {
-  TextEditingController _passwordController;
+  TextEditingController _passwordController, _cPasswordController;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -56,6 +65,7 @@ class _SetPasswordPageBodyState extends State<_SetPasswordPageBody> {
   void initState() {
     super.initState();
     _passwordController = TextEditingController();
+    _cPasswordController = TextEditingController();
   }
 
   @override
@@ -79,7 +89,10 @@ class _SetPasswordPageBodyState extends State<_SetPasswordPageBody> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .2,
                   ),
-                  Image.asset('assets/logo/logo.png'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Image.asset('assets/logo/logo.png'),
+                  ),
                   SizedBox(
                     height: 30,
                   ),
@@ -94,6 +107,27 @@ class _SetPasswordPageBodyState extends State<_SetPasswordPageBody> {
                     validator: (text) {
                       if (text.isEmpty) {
                         return 'Enter password';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  TextFormField(
+                    controller: _cPasswordController,
+                    keyboardType: TextInputType.text,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        labelText: 'Confirm Password',
+                        enabledBorder: OutlineInputBorder(),
+                        border: OutlineInputBorder()),
+                    validator: (text) {
+                      if (text.isEmpty) {
+                        return 'Re enter password';
+                      } else if (_passwordController.text !=
+                          _cPasswordController.text) {
+                        return 'Confirm password does not match';
                       }
                       return null;
                     },
@@ -115,11 +149,11 @@ class _SetPasswordPageBodyState extends State<_SetPasswordPageBody> {
                                   requestType: widget.requestType,
                                   userVerificationResponse:
                                       widget.verificationResponse,
-                                  token: widget.verificationResponse.token),
+                                  token: widget.token),
                             );
                           }
                         },
-                        text: 'Login',
+                        text: 'Continue',
                       );
                     },
                   ),
@@ -139,5 +173,6 @@ class _SetPasswordPageBodyState extends State<_SetPasswordPageBody> {
   void dispose() {
     super.dispose();
     _passwordController.dispose();
+    _cPasswordController.dispose();
   }
 }

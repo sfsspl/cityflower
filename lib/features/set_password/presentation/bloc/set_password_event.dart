@@ -16,7 +16,8 @@ class SetNewPasswordEvent extends SetPasswordEvent {
       @required this.requestType});
 
   @override
-  List<Object> get props => [userVerificationResponse, password, requestType,token];
+  List<Object> get props =>
+      [userVerificationResponse, password, requestType, token];
 }
 
 class SaveUserDataEvent extends SetPasswordEvent {

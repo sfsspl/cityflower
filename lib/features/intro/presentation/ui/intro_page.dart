@@ -37,7 +37,10 @@ class _IntroPageBodyState extends State<_IntroPageBody> {
         SizedBox(
           height: 100,
         ),
-        Image.asset('assets/logo/logo.png'),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Image.asset('assets/logo/logo.png'),
+        ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(8),
@@ -45,7 +48,7 @@ class _IntroPageBodyState extends State<_IntroPageBody> {
               child: Text(
                 'Hello..\n'
                 'We are super excited to serve you smartly..\n'
-                'Welcome to mycf',
+                'Welcome to CITY FLOWER REWARDS',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 42,

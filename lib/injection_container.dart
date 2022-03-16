@@ -44,6 +44,7 @@ import 'package:city_flower/features/user/data/datasource/user_datasource_impl.d
 import 'package:city_flower/features/user/domain/repository/user_repository.dart';
 import 'package:city_flower/features/user/domain/usecase/check_user_logged_in.dart';
 import 'package:city_flower/features/user/domain/usecase/get_mycf_card_details.dart';
+import 'package:city_flower/features/user/domain/usecase/get_user_token.dart';
 import 'package:city_flower/features/user/domain/usecase/login_usecase.dart';
 import 'package:city_flower/features/user/domain/usecase/logout_usecase.dart';
 import 'package:city_flower/features/user/domain/usecase/save_user_data_usecase.dart';
@@ -98,7 +99,8 @@ Future<void> init() async {
   serviceLocator.registerFactory(() => SetPasswordBloc(
       saveUserDataUseCase: serviceLocator(),
       saveUserTokenUseCase: serviceLocator(),
-      setPasswordUseCase: serviceLocator()));
+      setPasswordUseCase: serviceLocator(),
+      getUserTokenUseCase: serviceLocator()));
 
   /*
     ** Usecase
@@ -136,6 +138,8 @@ Future<void> init() async {
       () => RegisterUseCase(userRepository: serviceLocator()));
   serviceLocator.registerLazySingleton(
       () => SetPasswordUseCase(userRepository: serviceLocator()));
+  serviceLocator.registerLazySingleton(
+      () => GetUserTokenUseCase(userRepository: serviceLocator()));
 
   /*
     ** Repositories

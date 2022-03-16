@@ -53,7 +53,10 @@ class _SplashPageState extends State<_SplashPageBody> {
         }
       },
       child: Center(
-        child: Image.asset('assets/logo/logo.png'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Image.asset('assets/logo/logo.png'),
+        ),
       ),
     );
   }

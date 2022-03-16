@@ -36,6 +36,7 @@ class _CFCardPageBodyState extends State<CFCardPageBody> {
     super.initState();
     BlocProvider.of<CfCardBloc>(context).add(LoadCfCardPageEvent());
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<CfCardBloc, CfCardState>(
@@ -50,137 +51,145 @@ class _CFCardPageBodyState extends State<CFCardPageBody> {
             return Center(child: CircularProgressIndicator());
           } else if (state.cfCardResource.status == STATUS.success) {
             MyCFCardEntity _card = state.cfCardResource.data;
-            return SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.all(20),
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.blue.shade800,
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      width: double.maxFinite,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue.shade600,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            'mycf',
-                            style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          Text(
-                            'Loyalty card',
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          BlocBuilder<UserBloc, UserState>(
-                            builder: (context, state) {
-                              if (state.userDetails.status == STATUS.success) {
-                                UserEntity _userData = state.userDetails.data;
-                                return Text(
-                                  _userData.name,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white),
-                                );
-                              }
-                              return Container();
-                            },
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            'Card Number: ${_card.cardNumber}',
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            'Points: ${_card.pointBalance}',
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          BlocBuilder<UserBloc, UserState>(
-                            builder: (context, state) {
-                              if (state.userDetails.status == STATUS.success) {
-                                UserEntity _userData = state.userDetails.data;
-                                return Text(
-                                  _userData.email??'',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white),
-                                );
-                              }
-                              return Container();
-                            },
-                          ),
-                        ],
-                      ),
+            return RefreshIndicator(
+              onRefresh: (){
+                BlocProvider.of<CfCardBloc>(context).add(LoadCfCardPageEvent());
+                return Future.delayed(Duration(seconds: 5));
+              },
+              child: ListView(
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(20),
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.blue.shade800,
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: double.maxFinite,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue.shade800,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'SCAN ME',
-                            style: TextStyle(fontSize: 20, color: Colors.white),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          width: double.maxFinite,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.blue.shade600,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                            ),
-                            padding: const EdgeInsets.all(20),
-                            child: BarCodeImage(
-                              params: Code128BarCodeParams(
-                                _card.cardNumber,
-                                lineWidth: 2.0,
-                                // width for a single black/white bar (default: 2.0)
-                                barHeight: 90.0,
-                                // height for the entire widget (default: 100.0)
-                                withText:
-                                    true, // Render with text label or not (default: false)
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(
+                                'CITY FLOWER REWARDS',
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
                               ),
-                              onError: (error) {
-                                // Error handler
-                                print('error = $error');
-                              },
-                            ),
+                              Text(
+                                'Loyalty card',
+                                style: TextStyle(fontSize: 20, color: Colors.white),
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              BlocBuilder<UserBloc, UserState>(
+                                builder: (context, state) {
+                                  if (state.userDetails.status == STATUS.success) {
+                                    UserEntity _userData = state.userDetails.data;
+                                    return Text(
+                                      _userData.name,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white),
+                                    );
+                                  }
+                                  return Container();
+                                },
+                              ),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                'Card Number: ${_card.cardNumber}',
+                                style: TextStyle(fontSize: 20, color: Colors.white),
+                              ),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                'Points: ${_card.pointBalance}',
+                                style: TextStyle(fontSize: 20, color: Colors.white),
+                              ),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              BlocBuilder<UserBloc, UserState>(
+                                builder: (context, state) {
+                                  if (state.userDetails.status == STATUS.success) {
+                                    UserEntity _userData = state.userDetails.data;
+                                    return Text(
+                                      _userData.email ?? '',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white),
+                                    );
+                                  }
+                                  return Container();
+                                },
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: double.maxFinite,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.blue.shade800,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'SCAN ME',
+                                style: TextStyle(fontSize: 20, color: Colors.white),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                ),
+                                padding: const EdgeInsets.all(20),
+                                child: BarCodeImage(
+                                  params: Code128BarCodeParams(
+                                    _card.cardNumber,
+                                    lineWidth: 2.0,
+                                    // width for a single black/white bar (default: 2.0)
+                                    barHeight: 90.0,
+                                    // height for the entire widget (default: 100.0)
+                                    withText:
+                                        true, // Render with text label or not (default: false)
+                                  ),
+                                  onError: (error) {
+                                    // Error handler
+                                    print('error = $error');
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      height: 20,
-                    )
-                  ],
-                ),
+                  ),
+                ],
               ),
             );
           }

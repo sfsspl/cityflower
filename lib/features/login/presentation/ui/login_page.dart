@@ -61,7 +61,10 @@ class __LoginPageBodyState extends State<_LoginPageBody> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * .2,
               ),
-              Image.asset('assets/logo/logo.png'),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Image.asset('assets/logo/logo.png'),
+              ),
               SizedBox(
                 height: 30,
               ),

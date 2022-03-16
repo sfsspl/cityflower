@@ -146,6 +146,17 @@ class _PointsHistoryPageBodyState extends State<_PointsHistoryPageBody> {
                     },
                     itemCount: state.pointsHistory.length,
                   ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Points History will be updated in next 24 Hours',
+                    style: TextStyle(fontSize: 16, color: Colors.grey,),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
                 )
               ],
             );

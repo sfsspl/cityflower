@@ -85,6 +85,7 @@ class UserDataSourceImpl implements UserDataSource {
   Future<void> logout({String token}) async {
     var response = await httpPostRequest(
         httpClient: httpClient, url: LOGOUT_API_ENDPOINT, token: token);
+    print('logout ${response.statusCode} and ${response.body}');
     if (response.statusCode == 200) {
       return Right(null);
     }

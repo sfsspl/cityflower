@@ -41,7 +41,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         yield state.copy(logoutState: Resource.error(failure: l));
       }, (r) async* {
         yield state.copy(logoutState: Resource.success());
-        await this.close();
       });
     }
   }

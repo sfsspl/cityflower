@@ -35,14 +35,17 @@ class HomePage extends StatelessWidget {
                     UserEntity _user = state.userDetails.data;
                     return UserAccountsDrawerHeader(
                         accountName: Text(_user.name),
-                        accountEmail: Text(_user.email??''));
+                        accountEmail: Text(_user.email ?? ''));
                   }
                   return Container();
                 },
               ),
               ListTile(
-                onTap: (){
-                  navToRegister(context: context,  request_type: REQUEST_TYPE.CHANGE_PASSWORD);
+                onTap: () async {
+                  navToSetPasswordPage(
+                    context: context,
+                    requestType: REQUEST_TYPE.CHANGE_PASSWORD,
+                  );
                 },
                 leading: Icon(Icons.lock),
                 title: Text('Change Password'),
@@ -61,13 +64,6 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           title: Text('City Flower'),
           actions: [
-            IconButton(
-                icon: CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider(
-                    "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
-                  ),
-                ),
-                onPressed: () {}),
             IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
           ],
         ),
@@ -110,7 +106,10 @@ class _HomePageBodyState extends State<_HomePageBody> {
             }
           },
         ),
-        BlocListener<UserBloc, UserState>(listener: (context, state) {
+        BlocListener<UserBloc, UserState>(listenWhen: (previous, current) {
+          return previous.logoutState == null ||
+              previous.logoutState.status != current.logoutState.status;
+        }, listener: (context, state) {
           if (state.logoutState != null) {
             if (state.logoutState.status == STATUS.loading) {
               showProgressLoading(context);
@@ -127,214 +126,220 @@ class _HomePageBodyState extends State<_HomePageBody> {
       ],
       child: BlocBuilder<HomeBloc, HomePageState>(
         builder: (context, state) {
-          return Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    state.bannerResource.status == STATUS.loading
-                        ? AspectRatio(
-                            aspectRatio: 16 / 9,
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          )
-                        : state.bannerResource.status == STATUS.success
-                            ? (state.bannerResource.data as List<dynamic>)
-                                    .isEmpty
-                                ? Container()
-                                : Container(
-                                    child: CarouselSlider(
-                                      options: CarouselOptions(
-                                          viewportFraction: .8,
-                                          autoPlay: true,
-                                          aspectRatio: 16 / 9,
-                                          enlargeCenterPage: true),
-                                      items: (state.bannerResource.data
-                                              as List<String>)
-                                          .map(
-                                            (item) => Container(
-                                              clipBehavior: Clip.hardEdge,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Image.network(item,
-                                                  fit: BoxFit.cover,
-                                                  width: 1000),
-                                            ),
-                                          )
-                                          .toList(),
-                                    ),
-                                  )
-                            : Container(),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
+          return RefreshIndicator(
+            onRefresh: (){
+              BlocProvider.of<HomeBloc>(context).add(LoadHomePage());
+              return Future.delayed(Duration(seconds: 1));
+            },
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    children: [
+                      SizedBox(
+                        height: 10,
                       ),
-                      child: BlocBuilder<UserBloc, UserState>(
-                        builder: (context, state) {
-                          if (state.userDetails.status == STATUS.success) {
-                            UserEntity _userData = state.userDetails.data;
-                            return Text(
-                              'Welcome ${_userData.name}!',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            );
-                          }
-                          return Container();
-                        },
+                      state.bannerResource.status == STATUS.loading
+                          ? AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            )
+                          : state.bannerResource.status == STATUS.success
+                              ? (state.bannerResource.data as List<dynamic>)
+                                      .isEmpty
+                                  ? Container()
+                                  : Container(
+                                      child: CarouselSlider(
+                                        options: CarouselOptions(
+                                            viewportFraction: .8,
+                                            autoPlay: true,
+                                            aspectRatio: 16 / 9,
+                                            enlargeCenterPage: true),
+                                        items: (state.bannerResource.data
+                                                as List<String>)
+                                            .map(
+                                              (item) => Container(
+                                                clipBehavior: Clip.hardEdge,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: Image.network(item,
+                                                    fit: BoxFit.cover,
+                                                    width: 1000),
+                                              ),
+                                            )
+                                            .toList(),
+                                      ),
+                                    )
+                              : Container(),
+                      SizedBox(
+                        height: 16,
                       ),
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    state.myCfCardResource.status == STATUS.success
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 18,
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  'Available Point: ',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SlidingNumber(
-                                  number: (state.myCfCardResource.data
-                                              as MyCFCardEntity)
-                                          .pointBalance ??
-                                      0,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                  duration: const Duration(milliseconds: 500),
-                                  curve: Curves.easeOutQuint,
-                                ),
-                                Text(
-                                  ' Pts',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          )
-                        : Container(),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    GridView.count(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                        ),
+                        child: BlocBuilder<UserBloc, UserState>(
+                          builder: (context, state) {
+                            if (state.userDetails.status == STATUS.success) {
+                              UserEntity _userData = state.userDetails.data;
+                              return Text(
+                                'Welcome ${_userData.name}!',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              );
+                            }
+                            return Container();
+                          },
+                        ),
                       ),
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 20,
-                      childAspectRatio: 1.8,
-                      mainAxisSpacing: 10,
-                      children: [
-                        GridMenu(
-                            title: 'Points History',
-                            onClick: () {
-                              navToPointsHistory(context);
-                            }),
-                        GridMenu(
-                            title: 'Location',
-                            onClick: () {
-                              navToOutletList(context: context);
-                            }),
-                        GridMenu(
-                            title: 'Promotion',
+                      SizedBox(
+                        height: 24,
+                      ),
+                      state.myCfCardResource.status == STATUS.success
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18,
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Available Point: ',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SlidingNumber(
+                                    number: (state.myCfCardResource.data
+                                                as MyCFCardEntity)
+                                            .pointBalance ??
+                                        0,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.easeOutQuint,
+                                  ),
+                                  Text(
+                                    ' Pts',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      GridView.count(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                        ),
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 20,
+                        childAspectRatio: 1.8,
+                        mainAxisSpacing: 10,
+                        children: [
+                          GridMenu(
+                              title: 'Points History',
+                              onClick: () {
+                                navToPointsHistory(context);
+                              }),
+                          GridMenu(
+                              title: 'Location',
+                              onClick: () {
+                                navToOutletList(context: context);
+                              }),
+                          GridMenu(
+                              title: 'Promotion',
+                              onClick: () {
+                                navToPromotions(context,
+                                    promotionType: PROMOTION_TYPE.normal);
+                              }),
+                          GridMenu(
+                            title: 'Loyalty Promotion',
                             onClick: () {
                               navToPromotions(context,
-                                  promotionType: PROMOTION_TYPE.normal);
-                            }),
-                        GridMenu(
-                          title: 'Loyalty Promotion',
-                          onClick: () {
-                            navToPromotions(context,
-                                promotionType: PROMOTION_TYPE.special);
+                                  promotionType: PROMOTION_TYPE.special);
+                            },
+                          ),
+                          GridMenu(
+                            title: 'Buy Online',
+                            onClick: () {
+                              _openAppStore();
+                            },
+                          ),
+                          GridMenu(
+                            title: 'CITY FLOWER REWARDS',
+                            onClick: () {
+                              navToMyCFCard(context: context);
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                          onTap: () {
+                            _launchUrl(
+                                'https://www.facebook.com/cityflowerarabia');
                           },
-                        ),
-                        GridMenu(
-                          title: 'Buy Online',
-                          onClick: () {
-                            _openAppStore();
-                          },
-                        ),
-                        GridMenu(
-                          title: 'Go to MY CF Card',
-                          onClick: () {
-                            navToMyCFCard(context: context);
-                          },
-                        ),
-                      ],
+                          child: SvgPicture.asset('assets/icons/facebook.svg')),
                     ),
-                    SizedBox(
-                      height: 10,
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          _launchUrl(
+                              'https://www.instagram.com/cityflower_arabia/');
+                        },
+                        child: Image.asset(
+                          'assets/icons/instagram.png',
+                          height: 48,
+                          width: 48,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          _launchUrl('http://www.cityflowerksa.com');
+                        },
+                        child: Image.asset(
+                          'assets/icons/web.png',
+                          height: 48,
+                          width: 48,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: InkWell(
-                        onTap: () {
-                          _launchUrl(
-                              'https://www.facebook.com/cityflowerarabia');
-                        },
-                        child: SvgPicture.asset('assets/icons/facebook.svg')),
-                  ),
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        _launchUrl(
-                            'https://www.instagram.com/cityflower_arabia/');
-                      },
-                      child: Image.asset(
-                        'assets/icons/instagram.png',
-                        height: 48,
-                        width: 48,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        _launchUrl('https://www.cityflowerretail.com');
-                      },
-                      child: Image.asset(
-                        'assets/icons/web.png',
-                        height: 48,
-                        width: 48,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              )
-            ],
+                SizedBox(
+                  height: 20,
+                )
+              ],
+            ),
           );
         },
       ),

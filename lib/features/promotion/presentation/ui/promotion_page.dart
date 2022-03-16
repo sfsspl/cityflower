@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:city_flower/core/core_widgets/core_widgets.dart';
+import 'package:city_flower/core/util/date_formatter.dart';
 import 'package:city_flower/features/promotion/domain/entity/promotion_entity.dart';
 import 'package:city_flower/features/promotion/presentation/bloc/promotion_bloc.dart';
 import 'package:city_flower/injection_container.dart';
@@ -20,7 +21,9 @@ class PromotionPage extends StatelessWidget {
       create: (_) => serviceLocator(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(type==PROMOTION_TYPE.special?'Loyalty Promotion':'Promotion'),
+          title: Text(type == PROMOTION_TYPE.special
+              ? 'Loyalty Promotion'
+              : 'Promotion'),
         ),
         body: _PromotionsPageBody(
           type: type,
@@ -97,7 +100,7 @@ class _NormalPromotionView extends StatelessWidget {
     return Card(
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: (){
+        onTap: () {
           _showFullScreenImage(context, promotionEntity.imageUrl);
         },
         child: AspectRatio(
@@ -127,6 +130,19 @@ class _NormalPromotionView extends StatelessWidget {
                       SizedBox(
                         height: 4,
                       ),
+                      Text(
+                        promotionEntity.message,
+                        style: TextStyle(color: Colors.white),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'Live upto: ${formatTransactionDate(dateTime: promotionEntity.liveUpto)}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
                     ],
                   ),
                 ))
@@ -205,32 +221,31 @@ void _showFullScreenImage(BuildContext context, String imageUrl) {
   Navigator.of(context).push(
     MaterialPageRoute(
         builder: (context) => Scaffold(
-          backgroundColor: Colors.black,
-          body: Stack(
-            children: [
-              PhotoView(
-                imageProvider: CachedNetworkImageProvider(
-                  imageUrl,
-                ),
-                loadingBuilder: (context, _) =>
-                    CircularProgressIndicator(),
-              ),
-              Positioned(
-                left: 4,
-                top: 40,
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: Icon(
-                    Icons.close,
-                    color: Colors.white,
+              backgroundColor: Colors.black,
+              body: Stack(
+                children: [
+                  PhotoView(
+                    imageProvider: CachedNetworkImageProvider(
+                      imageUrl,
+                    ),
+                    loadingBuilder: (context, _) => CircularProgressIndicator(),
                   ),
-                ),
-              )
-            ],
-          ),
-        ),
+                  Positioned(
+                    left: 4,
+                    top: 40,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
         fullscreenDialog: true),
   );
 }

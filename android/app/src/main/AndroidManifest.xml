@@ -27,8 +27,8 @@
     </queries>
 
    <application
-        android:label="city_flower"
-        android:icon="@mipmap/ic_launcher">
+        android:label="City Flower Rewards"
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

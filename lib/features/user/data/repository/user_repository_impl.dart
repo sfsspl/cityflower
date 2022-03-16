@@ -133,4 +133,13 @@ class UserRepositoryImpl implements UserRepository {
       return Left(NetworkFailure());
     }
   }
+
+  @override
+  Future<String> getToken() async {
+    final _token = await userDataSource.getToken();
+    if (_token != null) {
+      return _token;
+    }
+    throw AuthException();
+  }
 }

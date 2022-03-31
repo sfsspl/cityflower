@@ -98,16 +98,15 @@ class UserDataSourceImpl implements UserDataSource {
   }
 
   @override
-  Future<String> register({String number}) async {
+  Future<String> register({String number,bool isForgotPassword}) async {
     var params = <String, String>{
       "country_id": COUNTRY_ID,
       "mobile_number": number,
+      "is_forgot_password": isForgotPassword?'1':'0'
     };
-
     var response = await httpPostRequest(
         httpClient: httpClient, url: REGISTER_API_ENDPOINT, params: params);
     if (response.statusCode == 200) {
-      print('response ${response.body}');
       return json.decode(response.body)['message'];
     }
     handleError(response);

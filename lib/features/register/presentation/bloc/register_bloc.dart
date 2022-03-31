@@ -21,7 +21,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   ) async* {
     if (event is RegisterEvent) {
       yield RegisterationInitiatedState();
-      final _result = await registerUseCase(event.mobileNumber);
+      final _result = await registerUseCase(RegisterParams(number: event.mobileNumber,isForgotPassword: event.isForgotPassword));
       yield* _result.fold((l) async* {
         yield RegistrationFailedState(failure: l);
       }, (r) async* {

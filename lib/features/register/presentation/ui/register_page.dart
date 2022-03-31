@@ -109,8 +109,9 @@ class _RegisterPageBodyState extends State<_RegisterPageBody> {
                       if (_formKey.currentState.validate()) {
                         BlocProvider.of<RegisterBloc>(context).add(
                           RegisterEvent(
-                            mobileNumber: _numberController.text,
-                          ),
+                              mobileNumber: _numberController.text,
+                              isForgotPassword: widget.requestType ==
+                                  REQUEST_TYPE.FORGOT_PASSWORD),
                         );
                       }
                     },

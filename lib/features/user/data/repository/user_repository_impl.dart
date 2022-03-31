@@ -102,10 +102,10 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, String>> register({String number}) async {
+  Future<Either<Failure, String>> register({String number,bool isForgotPassword}) async {
     if (await networkInfo.isConnected) {
       try {
-        String loginMessage = await userDataSource.register(number: number);
+        String loginMessage = await userDataSource.register(number: number,isForgotPassword:isForgotPassword);
         return Right(loginMessage);
       } on AuthException {
         return Left(AuthFailure());

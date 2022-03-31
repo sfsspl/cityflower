@@ -23,7 +23,7 @@ abstract class UserDataSource {
 
   Future<void> logout({@required String token});
 
-  Future<String> register({@required String number});
+  Future<String> register({@required String number, @required bool isForgotPassword});
 
   Future<void> setPassword({@required String token, @required String password});
 }

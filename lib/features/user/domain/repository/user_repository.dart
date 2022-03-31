@@ -21,7 +21,7 @@ abstract class UserRepository {
 
   Future<Either<Failure, void>> logout();
 
-  Future<Either<Failure, String>> register({@required String number});
+  Future<Either<Failure, String>> register({@required String number, @required bool isForgotPassword});
 
   Future<Either<Failure, void>> setNewPassword(
       {@required String token, @required String password});

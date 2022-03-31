@@ -1,5 +1,5 @@
-const BASE_URL = "http://api.camerton.in/api/";
-//const BASE_URL = "http://api.Cityflowerksa.com/api/";
+//const BASE_URL = "http://api.camerton.in/api/";
+const BASE_URL = "http://api.Cityflowerksa.com/api/";
 const LOGIN_API_ENDPOINT = BASE_URL + "login-using-mobile-number";
 const REGISTER_API_ENDPOINT = BASE_URL + "request-otp";
 const SET_PASSWORD_API_ENDPOINT = BASE_URL + "change-password";
